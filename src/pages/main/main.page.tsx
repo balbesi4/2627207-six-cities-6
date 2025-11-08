@@ -1,13 +1,17 @@
+import { useState } from 'react';
 import OffersList from '../../components/offer-list/offer-list.component.tsx';
 import { Card } from '../../types/card.type.tsx';
+import Map from '../../components/map/map.component.tsx';
 
 type MainPageProps = {
   offerCards: Card[];
 }
 
 export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.Element {
-  return (
+  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
+  const selectedOfferCard = offerCards.find((offerCard) => offerCard.id === activeOfferId);
 
+  return (
     <div className="page page--gray page--main">
       <header className="header">
         <div className="container">
@@ -96,11 +100,15 @@ export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.E
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <OffersList offerCards={offerCards} />
-              </div>
+              <OffersList offerCards={offerCards} onActiveOfferChange={setActiveOfferId} />
             </section>
-            <section className="cities__map map"></section>
+            <div className="cities__right-section">
+              <Map
+                city={offerCards[0].city}
+                offerCards={offerCards}
+                selectedOfferCard={selectedOfferCard}
+              />
+            </div>
           </div>
         </div>
       </main>

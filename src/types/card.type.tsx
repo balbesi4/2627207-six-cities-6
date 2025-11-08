@@ -1,3 +1,5 @@
+import { City } from './city.type';
+
 export type Card = {
   id: number;
   imageLink : string;
@@ -7,5 +9,5 @@ export type Card = {
   rating : number;
   description : string;
   housingType : string;
-  city: string;
+  city: City;
 }

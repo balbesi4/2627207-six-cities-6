@@ -10,7 +10,14 @@ export const offerCards: Card[] = [
     isInFavorites: false,
     rating: 80,
     housingType: 'Apartment',
-    city: 'Dusseldorf'
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3909553943508,
+        longitude: 4.85309666406198,
+        zoom: 16
+      }
+    }
   },
   {
     id: 2,
@@ -21,7 +28,14 @@ export const offerCards: Card[] = [
     isInFavorites: true,
     rating: 80,
     housingType: 'Room',
-    city: 'Brussels'
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3609553943508,
+        longitude: 4.85309666406198,
+        zoom: 16
+      }
+    }
   },
   {
     id: 3,
@@ -32,7 +46,14 @@ export const offerCards: Card[] = [
     isInFavorites: false,
     rating: 80,
     housingType: 'Apartment',
-    city: 'Amsterdam'
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3909553943508,
+        longitude: 4.929309666406198,
+        zoom: 16
+      }
+    }
   },
   {
     id: 4,
@@ -43,7 +64,14 @@ export const offerCards: Card[] = [
     isInFavorites: false,
     rating: 100,
     housingType: 'Apartment',
-    city: 'Hamburg'
+    city: {
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.3809553943508,
+        longitude: 4.939309666406198,
+        zoom: 16
+      }
+    }
   }
 ];
 
