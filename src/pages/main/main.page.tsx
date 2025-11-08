@@ -1,10 +1,11 @@
-import CardComponent from '../../components/card/card.component.tsx';
+import OffersList from '../../components/offer-list/offer-list.component.tsx';
+import { Card } from '../../types/card.type.tsx';
 
 type MainPageProps = {
-  cardCount: number;
+  offerCards: Card[];
 }
 
-export default function MainPage({cardCount: cardCount}: MainPageProps): JSX.Element {
+export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.Element {
   return (
 
     <div className="page page--gray page--main">
@@ -96,18 +97,7 @@ export default function MainPage({cardCount: cardCount}: MainPageProps): JSX.Ele
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {[...Array(cardCount).keys()].map((index) => (
-                  <CardComponent
-                    key={index}
-                    isPremium
-                    imageLink={'img/apartment-01.jpg'}
-                    cost={120}
-                    rating={4}
-                    description={'Comfortable apartment near the central city square'}
-                    housingType={'Apartment'}
-                    isInBookmarks
-                  />
-                ))}
+                <OffersList offerCards={offerCards} />
               </div>
             </section>
             <section className="cities__map map"></section>

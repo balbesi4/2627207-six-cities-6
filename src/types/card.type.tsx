@@ -1,9 +1,11 @@
 export type Card = {
+  id: number;
   imageLink : string;
   isPremium : boolean;
   cost : number;
-  isInBookmarks : boolean;
+  isInFavorites : boolean;
   rating : number;
   description : string;
   housingType : string;
+  city: string;
 }
