@@ -1,8 +1,14 @@
+import { Link } from 'react-router-dom';
 import {Card} from '../../types/card.type.tsx';
+import { AppRoute } from '../../types/app-route.type.tsx';
 
-export function CardComponent({isPremium, imageLink, cost, isInBookmarks, rating, description, housingType} : Card): JSX.Element {
+type CardComponentProps = Card & {
+  onHover?: (id: number | null) => void;
+};
+
+export function CardComponent({id, isPremium, imageLink, cost, isInFavorites: isInBookmarks, rating, description, housingType, onHover} : CardComponentProps): JSX.Element {
   return (
-    <article className="cities__card place-card">
+    <article className="cities__card place-card" onMouseEnter={() => onHover && onHover(id)} onMouseLeave={() => onHover && onHover(null)}>
       {
         isPremium &&
         <div className="place-card__mark">
@@ -10,9 +16,9 @@ export function CardComponent({isPremium, imageLink, cost, isInBookmarks, rating
         </div>
       }
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`${AppRoute.OffersMain}/${id}`}>
           <img className="place-card__image" src={imageLink} width={260} height={200} alt="Place image" />
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -38,7 +44,7 @@ export function CardComponent({isPremium, imageLink, cost, isInBookmarks, rating
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{description}</a>
+          <Link to={`${AppRoute.OffersMain}/${id}`}>{description}</Link>
         </h2>
         <p className="place-card__type">{housingType}</p>
       </div>
