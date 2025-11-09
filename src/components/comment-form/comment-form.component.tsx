@@ -1,8 +1,8 @@
 import React from 'react';
 
-function CommentForm(): JSX.Element {
+function ReviewForm(): JSX.Element {
   const [rating, setRatingValue] = React.useState<number | null>(null);
-  const [review, setComment] = React.useState('');
+  const [review, setReview] = React.useState('');
 
   const isSubmitButtonActive = rating !== null && review.trim().length >= 50;
 
@@ -35,7 +35,7 @@ function CommentForm(): JSX.Element {
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={review}
-        onChange={(e) => setComment(e.target.value)}
+        onChange={(e) => setReview(e.target.value)}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -50,4 +50,4 @@ function CommentForm(): JSX.Element {
   );
 }
 
-export default CommentForm;
+export default ReviewForm;

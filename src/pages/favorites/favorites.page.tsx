@@ -1,14 +1,17 @@
+import { Link } from 'react-router-dom';
+import Header from '../../components/header/header.component';
 import OffersList from '../../components/offer-list/offer-list.component';
-import { Card } from '../../types/card.type';
+import { OfferCard } from '../../types/offer-card.type';
+import { CardType } from '../../enums/card-type.enum';
 
 type FavoriteProps = {
-  offerCards: Card[];
+  offerCards: OfferCard[];
 }
 
 export function Favorites({offerCards}: FavoriteProps): JSX.Element {
   const favorites = offerCards.filter((offerCard) => offerCard.isInFavorites);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const cityToOffers = Object.groupBy((favorites), (offer: Card) => offer.city);
+  const cityToOffers = Object.groupBy((favorites), (offer: OfferCard) => offer.city.name);
 
   return (
     <body>
@@ -21,23 +24,7 @@ export function Favorites({offerCards}: FavoriteProps): JSX.Element {
                   <img className="header__logo" src="../../../markup/img/logo.svg" alt="6 cities logo" width="81" height="41" />
                 </a>
               </div>
-              <nav className="header__nav">
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <a className="header__nav-link header__nav-link--profile" href="#">
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                      </div>
-                      <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                      <span className="header__favorite-count">{favorites.length}</span>
-                    </a>
-                  </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#">
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
+              <Header offerCards={offerCards}/>
             </div>
           </div>
         </header>
@@ -52,14 +39,14 @@ export function Favorites({offerCards}: FavoriteProps): JSX.Element {
                   <li key={city} className="favorites__locations-items">
                     <div className="favorites__locations locations locations--current">
                       <div className="locations__item">
-                        <a className="locations__item-link" href="#">
+                        <Link className="locations__item-link" to="#">
                           <span>{city}</span>
-                        </a>
+                        </Link>
                       </div>
                     </div>
 
                     <div className="favorites__places">
-                      <OffersList offerCards={cityOffers}/>
+                      <OffersList offerCards={cityOffers} onActiveOfferChange={() => {}} cardType={CardType.Favorites}/>
                     </div>
                   </li>
                 ))}

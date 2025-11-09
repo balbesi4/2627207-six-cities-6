@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import OffersList from '../../components/offer-list/offer-list.component.tsx';
-import { Card } from '../../types/card.type.tsx';
+import { OfferCard } from '../../types/offer-card.type.tsx';
 import Map from '../../components/map/map.component.tsx';
+import { MapClassName } from '../../const.tsx';
+import Header from '../../components/header/header.component.tsx';
+import { CardType } from '../../enums/card-type.enum.tsx';
 
 type MainPageProps = {
-  offerCards: Card[];
+  offerCards: OfferCard[];
 }
 
 export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.Element {
@@ -21,23 +24,7 @@ export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.E
                 <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
               </a>
             </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            <Header offerCards={offerCards}/>
           </div>
         </div>
       </header>
@@ -100,13 +87,14 @@ export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.E
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <OffersList offerCards={offerCards} onActiveOfferChange={setActiveOfferId} />
+              <OffersList offerCards={offerCards} onActiveOfferChange={setActiveOfferId} cardType={CardType.Regular} />
             </section>
             <div className="cities__right-section">
               <Map
                 city={offerCards[0].city}
                 offerCards={offerCards}
                 selectedOfferCard={selectedOfferCard}
+                className={MapClassName.Main}
               />
             </div>
           </div>
