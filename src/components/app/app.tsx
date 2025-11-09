@@ -3,15 +3,17 @@ import MainPage from '../../pages/main/main.page';
 import { PrivateRoutes } from '../private-route/private-route.component';
 import { AppRoute } from '../../types/app-route.type';
 import { PageNotFound } from '../not-found/not-found.component';
-import { Card } from '../../types/card.type';
+import { OfferCard } from '../../types/offer-card.type';
+import { Review } from '../../types/review.type';
 
 type AppProps = {
-  offerCards: Card[];
+  offerCards: OfferCard[];
+  reviews: Review[];
 };
 
-function App({ offerCards }: AppProps): JSX.Element {
+function App({ offerCards, reviews }: AppProps): JSX.Element {
   const isAuthorized = false;
-  const authorizedRoutes = PrivateRoutes({isAuthorized : isAuthorized, offerCards: offerCards});
+  const authorizedRoutes = PrivateRoutes({isAuthorized, offerCards, reviews});
 
   return (
     <BrowserRouter>
