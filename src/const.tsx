@@ -1,4 +1,5 @@
 import { CardType as OfferCardType } from './enums/card-type.enum';
+import { SortType } from './enums/sort-options.enum';
 
 export const Settings = {
   cardCount: 5
@@ -6,6 +7,8 @@ export const Settings = {
 
 export const URL_MARKER_DEFAULT = '/img/pin.svg';
 export const URL_MARKER_CURRENT = '/img/pin-active.svg';
+export const DEFAULT_SORT_TYPE = SortType.Popular;
+export const SORTING_ARROW_SIZE = { width: 7, height: 4 };
 
 export const OfferCardImageWrapperClass = {
   [OfferCardType.Regular]: 'cities__image-wrapper',

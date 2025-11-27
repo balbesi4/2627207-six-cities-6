@@ -31,7 +31,7 @@ export default function Offer({ offerCards, reviews }: OfferPageProps): JSX.Elem
     return PageNotFound();
   }
 
-  const currentOfferReviews = reviews.filter((review) => review.offerId === currentOffer.id)
+  const currentOfferReviews = reviews.filter((review) => review.offerId === currentOffer.id);
   const nearbyOffers = offerCards.filter(
     (offerCard) => offerCard.city.name === currentOffer.city.name && offerCard.id !== currentOffer.id
   ).slice(0, 3);
