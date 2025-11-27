@@ -12,7 +12,7 @@ export function PrivateRoutes({isAuthorized, offerCards, reviews} : { isAuthoriz
   if (isAuthorized){
     return (
       <React.Fragment>
-        <Route path={AppRoute.Favorites} element={<Favorites offerCards={offerCards} />} />
+        <Route path={AppRoute.Favorites} element={<Favorites/>} />
         <Route path={AppRoute.Offer} element={<Offer offerCards={offerCards} reviews={reviews} />} />
         <Route path={AppRoute.Login} element={<Navigate to={AppRoute.Main} replace />}/>
       </React.Fragment>

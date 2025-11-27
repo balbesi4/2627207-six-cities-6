@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import OffersList from '../../components/offer-list/offer-list.component.tsx';
-import { OfferCard } from '../../types/offer-card.type.tsx';
 import Map from '../../components/map/map.component.tsx';
 import { MapClassName } from '../../const.tsx';
 import Header from '../../components/header/header.component.tsx';
 import { CardType } from '../../enums/card-type.enum.tsx';
+import { useAppDispatch, useAppSelector } from '../../hooks/index.ts';
+import CitiesList from '../../components/cities-list/cities-list.component.tsx';
+import { changeCity } from '../../store/action.ts';
 
-type MainPageProps = {
-  offerCards: OfferCard[];
-}
-
-export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.Element {
+export default function MainPage(): JSX.Element {
+  const selectedCity = useAppSelector((state) => state.city);
+  const selectedCityOfferCards = useAppSelector((state) => state.offers.filter((offer) => offer.city.name === selectedCity.name));
+  const dispatch = useAppDispatch();
   const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
-  const selectedOfferCard = offerCards.find((offerCard) => offerCard.id === activeOfferId);
+  const selectedOfferCard = selectedCityOfferCards.find((offerCard) => offerCard.id === activeOfferId);
 
   return (
     <div className="page page--gray page--main">
@@ -24,54 +25,19 @@ export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.E
                 <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
               </a>
             </div>
-            <Header offerCards={offerCards}/>
+            <Header offerCards={selectedCityOfferCards}/>
           </div>
         </div>
       </header>
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
-        </div>
+        <CitiesList selectedCity={selectedCity} onCityChange={(city) => dispatch(changeCity(city))}/>
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">312 places to stay in Amsterdam</b>
+              <b className="places__found">{selectedCityOfferCards.length} places to stay in {selectedCity.name}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -87,12 +53,12 @@ export default function MainPage({offerCards: offerCards}: MainPageProps): JSX.E
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <OffersList offerCards={offerCards} onActiveOfferChange={setActiveOfferId} cardType={CardType.Regular} />
+              <OffersList offerCards={selectedCityOfferCards} onActiveOfferChange={setActiveOfferId} cardType={CardType.Regular} />
             </section>
             <div className="cities__right-section">
               <Map
-                city={offerCards[0].city}
-                offerCards={offerCards}
+                city={selectedCity}
+                offerCards={selectedCityOfferCards}
                 selectedOfferCard={selectedOfferCard}
                 className={MapClassName.Main}
               />
