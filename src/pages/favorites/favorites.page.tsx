@@ -3,15 +3,12 @@ import Header from '../../components/header/header.component';
 import OffersList from '../../components/offer-list/offer-list.component';
 import { OfferCard } from '../../types/offer-card.type';
 import { CardType } from '../../enums/card-type.enum';
+import { useAppSelector } from '../../hooks';
 
-type FavoriteProps = {
-  offerCards: OfferCard[];
-}
-
-export function Favorites({offerCards}: FavoriteProps): JSX.Element {
-  const favorites = offerCards.filter((offerCard) => offerCard.isInFavorites);
+export function Favorites(): JSX.Element {
+  const favoriteOfferCards = useAppSelector((state) => state.offers.filter((offer) => offer.isInFavorites));
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const cityToOffers = Object.groupBy((favorites), (offer: OfferCard) => offer.city.name);
+  const cityToOffers = Object.groupBy((favoriteOfferCards), (offer: OfferCard) => offer.city.name);
 
   return (
     <body>
@@ -24,7 +21,7 @@ export function Favorites({offerCards}: FavoriteProps): JSX.Element {
                   <img className="header__logo" src="../../../markup/img/logo.svg" alt="6 cities logo" width="81" height="41" />
                 </a>
               </div>
-              <Header offerCards={offerCards}/>
+              <Header offerCards={favoriteOfferCards}/>
             </div>
           </div>
         </header>
@@ -63,6 +60,5 @@ export function Favorites({offerCards}: FavoriteProps): JSX.Element {
     </body>
   );
 }
-
 
 export default Favorites;

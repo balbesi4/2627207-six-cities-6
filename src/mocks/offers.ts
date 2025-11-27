@@ -52,10 +52,10 @@ export const offerCards: OfferCard[] = [
     rating: 80,
     housingType: 'Room',
     city: {
-      name: 'Amsterdam',
+      name: 'Paris',
       location: {
-        latitude: 52.3609553943508,
-        longitude: 4.85309666406198,
+        latitude: 48.85661,
+        longitude: 2.351499,
         zoom: 16
       }
     },
