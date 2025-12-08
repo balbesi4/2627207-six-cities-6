@@ -6,11 +6,11 @@ import { CardType } from '../../enums/card-type.enum.tsx';
 type OffersListProps = {
   offerCards: OfferCard[];
   cardType: CardType;
-  onActiveOfferChange: (offerId: number | null) => void;
+  onActiveOfferChange: (offerId: string | null) => void;
 }
 
 export default function OffersList({ offerCards, cardType, onActiveOfferChange }: OffersListProps): JSX.Element {
-  const [activeOfferId, activateOfferId] = React.useState<number | null>(null);
+  const [activeOfferId, activateOfferId] = React.useState<string | null>(null);
 
   useEffect(() => {
     onActiveOfferChange(activeOfferId);

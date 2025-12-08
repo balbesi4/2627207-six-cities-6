@@ -6,7 +6,7 @@ import { OfferCardImageWrapperClass } from '../../const.tsx';
 
 type CardComponentProps = {
   offerCard: OfferCard;
-  onHover?: (id: number | null) => void;
+  onHover?: (id: string | null) => void;
   cardType: CardType;
 };
 
@@ -23,7 +23,7 @@ export function CardComponent({ offerCard, onHover, cardType } : CardComponentPr
         <Link to={`${AppRoute.OffersMain}/${offerCard.id}`}>
           <img
             className="place-card__image"
-            src={offerCard.imageLink}
+            src={offerCard.previewImage}
             width={cardType === CardType.Favorites ? 150 : 260}
             height={cardType === CardType.Favorites ? 110 : 200}
             alt="Place image"
@@ -33,18 +33,18 @@ export function CardComponent({ offerCard, onHover, cardType } : CardComponentPr
       <div className={`${cardType === CardType.Favorites ? 'favorites__card-info' : ''} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;{offerCard.cost}</b>
+            <b className="place-card__price-value">&euro;{offerCard.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <
             button className={`place-card__bookmark-button button ${
-              offerCard.isInFavorites && 'place-card__bookmark-button--active'} button`}
+              offerCard.isFavorite && 'place-card__bookmark-button--active'} button`}
             type="button"
           >
             <svg className="place-card__bookmark-icon" width={18} height={19}>
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
-            <span className="visually-hidden">{offerCard.isInFavorites && 'In bookmarks' || !offerCard.isInFavorites && 'To bookmarks'}</span>
+            <span className="visually-hidden">{offerCard.isFavorite && 'In bookmarks' || !offerCard.isFavorite && 'To bookmarks'}</span>
           </button>
         </div>
         <div className="place-card__rating rating">
@@ -54,9 +54,9 @@ export function CardComponent({ offerCard, onHover, cardType } : CardComponentPr
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`${AppRoute.OffersMain}/${offerCard.id}`}>{offerCard.description}</Link>
+          <Link to={`${AppRoute.OffersMain}/${offerCard.id}`}>{'There will be offer description'}</Link>
         </h2>
-        <p className="place-card__type">{offerCard.housingType}</p>
+        <p className="place-card__type">{offerCard.type}</p>
       </div>
     </article>
   );

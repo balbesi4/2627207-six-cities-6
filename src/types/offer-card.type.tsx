@@ -1,20 +1,17 @@
 import { City } from './city.type';
-import { User } from './user.type';
+import { Location } from './location.type';
+
 
 export type OfferCard = {
-  id: number;
+  id: string;
   title: string;
-  imageLink : string;
+  previewImage : string;
   isPremium : boolean;
-  cost : number;
-  isInFavorites : boolean;
+  price : number;
+  isFavorite : boolean;
   rating : number;
-  description : string;
-  housingType : string;
+  type : string;
   city: City;
-  bedroomsCount: number;
-  author: User;
-  maxAdults: number;
-  amenities: string[];
+  location: Location;
   imageLinks: string[];
 }

@@ -35,7 +35,7 @@ export default function Map(mapProps: MapProps): JSX.Element {
       return;
     }
     const layer = layerGroup().addTo(map);
-    offerCards.forEach(({ id, city: { location } }) =>
+    offerCards.forEach(({ id, location }) =>
       new Marker([location.latitude, location.longitude])
         .setIcon(id === selectedOfferCard?.id ? currentIcon : baseIcon)
         .addTo(layer)
