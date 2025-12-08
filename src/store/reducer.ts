@@ -1,9 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { changeCity, loadOffers, setOffersLoadingStatus, setReviews } from './action.js';
+import { changeCity, loadOffers, requireAuth, setOffersLoadingStatus, setReviews } from './action.js';
 import { City } from '../types/city.type.js';
 import { OfferCard } from '../types/offer-card.type.js';
 import { SortType } from '../enums/sort-options.enum.js';
 import { Review } from '../types/review.type.js';
+import { AuthStatus } from '../enums/auth-status.enum.js';
 
 type State = {
   city: City;
@@ -11,6 +12,7 @@ type State = {
   reviews: Review[];
   sortType: SortType;
   areOffersLoading: boolean;
+  authStatus: AuthStatus;
 };
 
 const initialState: State = {
@@ -26,6 +28,7 @@ const initialState: State = {
   reviews: [],
   sortType: SortType.Popular,
   areOffersLoading: false,
+  authStatus: AuthStatus.Unknown,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -41,6 +44,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setReviews, (state, action) => {
       state.reviews = action.payload;
+    })
+    .addCase(requireAuth, (state, action) => {
+      state.authStatus = action.payload;
     });
 });
 
