@@ -2,7 +2,7 @@ import { User } from './user.type';
 
 export type Review = {
     id: number;
-    offerId: number;
+    offerId: string;
     author: User;
     text: string;
     date: Date;

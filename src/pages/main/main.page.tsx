@@ -15,7 +15,7 @@ export default function MainPage(): JSX.Element {
   const selectedCity = useAppSelector((state) => state.city);
   const selectedCityOfferCards = useAppSelector((state) => state.offers.filter((offer) => offer.city.name === selectedCity.name));
 
-  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const selectedOfferCard = selectedCityOfferCards.find((offerCard) => offerCard.id === activeOfferId);
 
   const [selectedSortType, setCurrentSortType] = useState<SortType>(DEFAULT_SORT_TYPE);

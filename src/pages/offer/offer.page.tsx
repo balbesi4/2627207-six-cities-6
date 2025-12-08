@@ -1,35 +1,24 @@
 import { Link, useParams } from 'react-router-dom';
-import { PageNotFound } from '../../components/not-found/not-found.component';
 import ReviewForm from '../../components/comment-form/comment-form.component';
-import { OfferCard } from '../../types/offer-card.type';
-import { Review } from '../../types/review.type';
 import Header from '../../components/header/header.component';
 import ReviewList from '../../components/review/review-list.component';
 import Map from '../../components/map/map.component';
 import { MapClassName } from '../../const';
 import OffersList from '../../components/offer-list/offer-list.component';
 import { CardType } from '../../enums/card-type.enum';
-import { useState } from 'react';
 import { AppRoute } from '../../types/app-route.type';
+import { useAppSelector } from '../../hooks';
+import { useState } from 'react';
 
-type OfferPageProps = {
-  offerCards: OfferCard[];
-  reviews: Review[];
-};
 
-export default function Offer({ offerCards, reviews }: OfferPageProps): JSX.Element {
-  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
+export default function Offer(): JSX.Element {
+  const offerCards = useAppSelector((state) => state.offers);
+  const reviews = useAppSelector((state) => state.reviews);
+  const params = useParams();
+
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const currentOffer = offerCards.find((item) => item.id === params.id) ?? offerCards[0];
   const selectedOfferCard = offerCards.find((offerCard) => offerCard.id === activeOfferId);
-
-  const { id } = useParams<{ id: string }>();
-  if (Number.isNaN(Number(id))) {
-    return PageNotFound();
-  }
-
-  const currentOffer = offerCards.find((offerCard) => offerCard.id === Number(id));
-  if (!currentOffer) {
-    return PageNotFound();
-  }
 
   const currentOfferReviews = reviews.filter((review) => review.offerId === currentOffer.id);
   const nearbyOffers = offerCards.filter(
@@ -73,11 +62,11 @@ export default function Offer({ offerCards, reviews }: OfferPageProps): JSX.Elem
                 <h1 className="offer__name">
                   {currentOffer.title}
                 </h1>
-                <button className={`offer__bookmark-button ${currentOffer.isInFavorites && 'offer__bookmark-button--active'} button`} type="button">
+                <button className={`offer__bookmark-button ${currentOffer.isFavorite && 'offer__bookmark-button--active'} button`} type="button">
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
-                  <span className="visually-hidden">{currentOffer.isInFavorites ? 'In bookmarks' : 'To bookmarks'}</span>
+                  <span className="visually-hidden">{currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
                 </button>
               </div>
               <div className="offer__rating rating">
@@ -88,18 +77,18 @@ export default function Offer({ offerCards, reviews }: OfferPageProps): JSX.Elem
                 <span className="offer__rating-value rating__value">{currentOffer.rating}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">{currentOffer.housingType}</li>
-                <li className="offer__feature offer__feature--bedrooms">{currentOffer.bedroomsCount} Bedrooms</li>
-                <li className="offer__feature offer__feature--adults">Max {currentOffer.maxAdults} adults</li>
+                <li className="offer__feature offer__feature--entire">{currentOffer.type}</li>
+                <li className="offer__feature offer__feature--bedrooms">3 Bedrooms</li>
+                <li className="offer__feature offer__feature--adults">Max 4 adults</li>
               </ul>
               <div className="offer__price">
-                <b className="offer__price-value">&euro;{currentOffer.cost}</b>
+                <b className="offer__price-value">&euro;{currentOffer.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  {currentOffer.amenities.map((amenity) => (
+                  {[].map((amenity) => (
                     <li key={amenity} className="offer__inside-item">{amenity}</li>
                   ))}
                 </ul>
@@ -107,14 +96,16 @@ export default function Offer({ offerCards, reviews }: OfferPageProps): JSX.Elem
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className={`offer__avatar-wrapper ${currentOffer.author.isPro && 'offer__avatar-wrapper--pro'} user__avatar-wrapper`}>
-                    <img className="offer__avatar user__avatar" src={currentOffer.author.avatarUrl} width="74" height="74" alt="Host avatar" />
+                  <div className={`offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper`}>
+                    <img className="offer__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar" />
                   </div>
-                  <span className="offer__user-name">{currentOffer.author.name}</span>
-                  {currentOffer.author.isPro && <span className="offer__user-status">Pro</span>}
+                  <span className="offer__user-name">Angelina</span>
+                  <span className="offer__user-status">Pro</span>
                 </div>
                 <div className="offer__description">
-                  <p className="offer__text">{currentOffer.description}</p>
+                  <p className="offer__text">
+                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
+                  </p>
                 </div>
               </div>
               <section className="offer__reviews reviews">

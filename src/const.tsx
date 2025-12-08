@@ -10,6 +10,8 @@ export const URL_MARKER_CURRENT = '/img/pin-active.svg';
 export const DEFAULT_SORT_TYPE = SortType.Popular;
 export const SORTING_ARROW_SIZE = { width: 7, height: 4 };
 
+export const AUTH_TOKEN_KEY_NAME = 'six-cities-token';
+
 export const OfferCardImageWrapperClass = {
   [OfferCardType.Regular]: 'cities__image-wrapper',
   [OfferCardType.Nearest]: 'near-places__image-wrapper',

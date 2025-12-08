@@ -9,7 +9,7 @@ type HeaderProps = {
 };
 
 export default function Header({offerCards}: HeaderProps): JSX.Element {
-  const favoriteCount = offerCards.filter((offerCard) => offerCard.isInFavorites).length;
+  const favoriteCount = offerCards.filter((offerCard) => offerCard.isFavorite).length;
   const currentUser = user;
 
   return (

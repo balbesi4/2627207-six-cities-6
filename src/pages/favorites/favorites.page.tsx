@@ -6,7 +6,7 @@ import { CardType } from '../../enums/card-type.enum';
 import { useAppSelector } from '../../hooks';
 
 export function Favorites(): JSX.Element {
-  const favoriteOfferCards = useAppSelector((state) => state.offers.filter((offer) => offer.isInFavorites));
+  const favoriteOfferCards = useAppSelector((state) => state.offers.filter((offer) => offer.isFavorite));
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const cityToOffers = Object.groupBy((favoriteOfferCards), (offer: OfferCard) => offer.city.name);
 
