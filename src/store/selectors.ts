@@ -2,7 +2,6 @@ import { createSelector } from '@reduxjs/toolkit';
 import { State } from '../types/state.type.js';
 import { sortOffersByOption } from '../utils/offer-sort.util.js';
 
-// Base selectors
 export const selectCity = (state: State) => state.city.city;
 export const selectOffers = (state: State) => state.offers.offers;
 export const selectSortType = (state: State) => state.offers.sortType;
@@ -19,7 +18,6 @@ export const selectIsSubmitting = (state: State) => state.reviews.isSubmitting;
 export const selectAuthStatus = (state: State) => state.user.authStatus;
 export const selectUser = (state: State) => state.user.user;
 
-// Memoized selectors
 export const selectOffersForCity = createSelector(
   [selectOffers, selectCity],
   (offers, city) => offers.filter((offer) => offer.city.name === city.name)
