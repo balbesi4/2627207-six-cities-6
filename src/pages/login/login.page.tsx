@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import { LogInForm } from "./login-form.page";
+import { selectCity } from '../../store/selectors';
 
 export default function Login(): JSX.Element {
-  const currentCityName = useAppSelector((state) => state.city.name);
+  const currentCity = useAppSelector(selectCity);
   return (
     <body>
       <div className="page page--gray page--login">
@@ -28,7 +29,7 @@ export default function Login(): JSX.Element {
             <section className="locations locations--login locations--current">
               <div className="locations__item">
                 <Link className="locations__item-link" to='/'>
-                  <span>{currentCityName}</span>
+                  <span>{currentCity.name}</span>
                 </Link>
               </div>
             </section>

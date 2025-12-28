@@ -10,9 +10,10 @@ import FavoritesPage from '../../pages/favorites/favorites.page';
 import { PageNotFound } from '../not-found/not-found.component';
 import HistoryRouter from '../history/history-route.component';
 import browserHistory from '../../browser-history';
+import { selectAreOffersLoading } from '../../store/selectors';
 
 export default function App(): JSX.Element {
-  const isOffersDataLoading = useAppSelector((state) => state.areOffersLoading);
+  const isOffersDataLoading = useAppSelector(selectAreOffersLoading);
 
   if (isOffersDataLoading) {
     return (

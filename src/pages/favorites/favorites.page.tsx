@@ -4,9 +4,15 @@ import OffersList from '../../components/offer-list/offer-list.component';
 import { OfferCard } from '../../types/offer-card.type';
 import { CardType } from '../../enums/card-type.enum';
 import { useAppSelector } from '../../hooks';
+import { useMemo } from 'react';
+import { selectOffers } from '../../store/selectors';
 
 export function Favorites(): JSX.Element {
-  const favoriteOfferCards = useAppSelector((state) => state.offers.filter((offer) => offer.isFavorite));
+  const offers = useAppSelector(selectOffers);
+  const favoriteOfferCards = useMemo(
+    () => offers.filter((offer) => offer.isFavorite),
+    [offers]
+  );
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const cityToOffers = Object.groupBy((favoriteOfferCards), (offer: OfferCard) => offer.city.name);
 

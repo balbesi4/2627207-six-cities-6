@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import {OfferCard} from '../../types/offer-card.type.tsx';
 import { AppRoute } from '../../types/app-route.type.tsx';
@@ -10,7 +11,7 @@ type CardComponentProps = {
   cardType: CardType;
 };
 
-export function CardComponent({ offerCard, onHover, cardType } : CardComponentProps): JSX.Element {
+function CardComponent({ offerCard, onHover, cardType } : CardComponentProps): JSX.Element {
   return (
     <article className={`${cardType} place-card`} onMouseEnter={() => onHover && onHover(offerCard.id)} onMouseLeave={() => onHover && onHover(null)}>
       {
@@ -62,4 +63,4 @@ export function CardComponent({ offerCard, onHover, cardType } : CardComponentPr
   );
 }
 
-export default CardComponent;
+export default memo(CardComponent);
