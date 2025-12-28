@@ -21,12 +21,10 @@ const getErrorMessage = (error: AxiosError<DetailMessageType>): string => {
     const status = error.response.status;
     const data = error.response.data;
 
-    // Если есть сообщение от сервера
     if (data && typeof data === 'object' && 'message' in data) {
       return data.message;
     }
 
-    // Fallback сообщения в зависимости от статуса
     switch (status) {
       case StatusCodes.BAD_REQUEST:
         return 'Некорректный запрос. Проверьте введенные данные.';
@@ -39,7 +37,6 @@ const getErrorMessage = (error: AxiosError<DetailMessageType>): string => {
     }
   }
 
-  // Если нет ответа от сервера (например, проблемы с сетью)
   if (error.request) {
     return 'Ошибка соединения с сервером. Проверьте подключение к интернету.';
   }
@@ -72,7 +69,6 @@ export const createAPI = (): AxiosInstance => {
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
       if (error.response && shouldDisplayError(error.response)) {
-        // Не показываем ошибку для проверки авторизации (checkAuth)
         const isAuthCheck = error.config?.url?.includes('/login') && error.config?.method === 'get';
 
         if (!isAuthCheck) {

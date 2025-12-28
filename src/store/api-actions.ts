@@ -106,7 +106,6 @@ export const fetchNearbyOffersAction = createAsyncThunk<void, string, {
       const {data} = await api.get<OfferCard[]>(`/offers/${offerId}/nearby`);
       dispatch(setNearbyOffers(data));
     } catch {
-      // Если не удалось загрузить nearby offers, просто устанавливаем пустой массив
       dispatch(setNearbyOffers([]));
     }
   },
@@ -136,7 +135,6 @@ export const postCommentAction = createAsyncThunk<void, {offerId: string; commen
   'comments/postComment',
   async ({offerId, comment, rating}, {dispatch, extra: api}) => {
     await api.post(`/comments/${offerId}`, {comment, rating});
-    // После успешного добавления комментария загружаем все комментарии заново
     const {data} = await api.get<Review[]>(`/comments/${offerId}`);
     dispatch(setReviews(data));
   },
