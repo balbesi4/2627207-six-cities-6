@@ -10,30 +10,30 @@ import { AppRoute } from '../../types/app-route.type';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useEffect, useState } from 'react';
 import { fetchOfferAction, fetchNearbyOffersAction, fetchCommentsAction } from '../../store/api-actions';
-import { setCurrentOffer, setNearbyOffers } from '../../store/action';
+import { clearOfferDetails } from '../../store/slices/offer-details-slice';
 import { LoadingScreen } from '../../components/spinner/spinner.component';
 import { AuthStatus } from '../../enums/auth-status.enum';
+import { selectCurrentOffer, selectNearbyOffers, selectReviews, selectIsOfferLoading, selectHasOfferError, selectAuthStatus, selectOffers } from '../../store/selectors';
 
 
 export default function Offer(): JSX.Element {
   const params = useParams();
   const dispatch = useAppDispatch();
 
-  const currentOffer = useAppSelector((state) => state.currentOffer);
-  const nearbyOffers = useAppSelector((state) => state.nearbyOffers);
-  const reviews = useAppSelector((state) => state.reviews);
-  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
-  const hasOfferError = useAppSelector((state) => state.hasOfferError);
-  const authStatus = useAppSelector((state) => state.authStatus);
-  const offerCards = useAppSelector((state) => state.offers);
+  const currentOffer = useAppSelector(selectCurrentOffer);
+  const nearbyOffers = useAppSelector(selectNearbyOffers);
+  const reviews = useAppSelector(selectReviews);
+  const isOfferLoading = useAppSelector(selectIsOfferLoading);
+  const hasOfferError = useAppSelector(selectHasOfferError);
+  const authStatus = useAppSelector(selectAuthStatus);
+  const offerCards = useAppSelector(selectOffers);
 
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const selectedOfferCard = nearbyOffers.find((offerCard) => offerCard.id === activeOfferId);
 
   useEffect(() => {
     if (params.id) {
-      dispatch(setCurrentOffer(null));
-      dispatch(setNearbyOffers([]));
+      dispatch(clearOfferDetails());
       dispatch(fetchOfferAction(params.id));
       dispatch(fetchNearbyOffersAction(params.id));
       dispatch(fetchCommentsAction(params.id));

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, memo } from 'react';
 import { Icon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { City } from '../../types/city.type';
@@ -25,7 +25,7 @@ const currentIcon = new Icon({
   iconAnchor: [20, 40],
 });
 
-export default function Map(mapProps: MapProps): JSX.Element {
+function Map(mapProps: MapProps): JSX.Element {
   const { city, offerCards, selectedOfferCard, className } = mapProps;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
@@ -48,3 +48,5 @@ export default function Map(mapProps: MapProps): JSX.Element {
 
   return <div className={className} style={{height: '500px'}} ref={mapRef}></div>;
 }
+
+export default memo(Map);

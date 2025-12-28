@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useCallback } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
 
@@ -9,12 +9,12 @@ export function LogInForm(): JSX.Element {
     password: '',
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  }, []);
 
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     if (formData.email.length > 0 && formData.password.length > 0) {
@@ -23,7 +23,7 @@ export function LogInForm(): JSX.Element {
         password: formData.password
       }));
     }
-  };
+  }, [dispatch, formData.email, formData.password]);
 
   return (
     <form onSubmit={handleSubmit} className="login__form form">
