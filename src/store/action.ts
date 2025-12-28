@@ -13,3 +13,7 @@ export const setReviews = createAction<Review[]>('reviews/setReviews');
 export const setOffersLoadingStatus = createAction<boolean>('data/setOffersDataLoadingStatus');
 export const requireAuth = createAction<AuthStatus>('user/requireAuthorization');
 export const redirectToRoute = createAction<AppRoute>('engine/redirectToRoute');
+export const setCurrentOffer = createAction<OfferCard | null>('offer/setCurrentOffer');
+export const setNearbyOffers = createAction<OfferCard[]>('offer/setNearbyOffers');
+export const setOfferLoadingStatus = createAction<boolean>('offer/setOfferLoadingStatus');
+export const setOfferError = createAction<boolean>('offer/setOfferError');

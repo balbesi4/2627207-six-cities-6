@@ -1,7 +1,7 @@
 import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 
-import { setOffersLoadingStatus, loadOffers, requireAuth, redirectToRoute } from './action';
+import { setOffersLoadingStatus, loadOffers, requireAuth, redirectToRoute, setReviews, setCurrentOffer, setNearbyOffers, setOfferLoadingStatus, setOfferError } from './action';
 import { AppDispatch, State } from '../types/state.type';
 import { OfferCard } from '../types/offer-card.type';
 import { AppRoute } from '../types/app-route.type';
@@ -9,6 +9,7 @@ import { AuthStatus } from '../enums/auth-status.enum';
 import { removeToken, saveToken } from '../services/token';
 import { AuthData } from '../types/auth-data.type';
 import { User } from '../types/user.type';
+import { Review } from '../types/review.type';
 
 
 export const fetchOffersAction = createAsyncThunk<void, undefined, {
@@ -66,5 +67,75 @@ export const logoutAction = createAsyncThunk<void, undefined, {
     removeToken();
     dispatch(requireAuth(AuthStatus.NotAuth));
     dispatch(redirectToRoute(AppRoute.Main));
+  },
+);
+
+export const fetchOfferAction = createAsyncThunk<void, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offer/fetchOffer',
+  async (offerId, {dispatch, extra: api}) => {
+    dispatch(setOfferLoadingStatus(true));
+    dispatch(setOfferError(false));
+    try {
+      const {data} = await api.get<OfferCard>(`/offers/${offerId}`);
+      dispatch(setCurrentOffer(data));
+    } catch (error) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as {response?: {status: number}};
+        if (axiosError.response?.status === 404) {
+          dispatch(setOfferError(true));
+        }
+      }
+    } finally {
+      dispatch(setOfferLoadingStatus(false));
+    }
+  },
+);
+
+export const fetchNearbyOffersAction = createAsyncThunk<void, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offer/fetchNearbyOffers',
+  async (offerId, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.get<OfferCard[]>(`/offers/${offerId}/nearby`);
+      dispatch(setNearbyOffers(data));
+    } catch {
+      dispatch(setNearbyOffers([]));
+    }
+  },
+);
+
+export const fetchCommentsAction = createAsyncThunk<void, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'comments/fetchComments',
+  async (offerId, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.get<Review[]>(`/comments/${offerId}`);
+      dispatch(setReviews(data));
+    } catch {
+      dispatch(setReviews([]));
+    }
+  },
+);
+
+export const postCommentAction = createAsyncThunk<void, {offerId: string; comment: string; rating: number}, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'comments/postComment',
+  async ({offerId, comment, rating}, {dispatch, extra: api}) => {
+    await api.post(`/comments/${offerId}`, {comment, rating});
+    const {data} = await api.get<Review[]>(`/comments/${offerId}`);
+    dispatch(setReviews(data));
   },
 );

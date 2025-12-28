@@ -3,8 +3,8 @@ import { User } from './user.type';
 export type Review = {
     id: number;
     offerId: string;
-    author: User;
-    text: string;
-    date: Date;
+    user: User;
+    comment: string;
+    date: string;
     rating: number;
 };
