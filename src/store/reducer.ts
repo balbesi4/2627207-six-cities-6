@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { changeCity, loadOffers, requireAuth, setOffersLoadingStatus, setReviews } from './action.js';
+import { changeCity, loadOffers, requireAuth, setOffersLoadingStatus, setReviews, setCurrentOffer, setNearbyOffers, setOfferLoadingStatus, setOfferError } from './action.js';
 import { City } from '../types/city.type.js';
 import { OfferCard } from '../types/offer-card.type.js';
 import { SortType } from '../enums/sort-options.enum.js';
@@ -13,6 +13,10 @@ type State = {
   sortType: SortType;
   areOffersLoading: boolean;
   authStatus: AuthStatus;
+  currentOffer: OfferCard | null;
+  nearbyOffers: OfferCard[];
+  isOfferLoading: boolean;
+  hasOfferError: boolean;
 };
 
 const initialState: State = {
@@ -29,6 +33,10 @@ const initialState: State = {
   sortType: SortType.Popular,
   areOffersLoading: false,
   authStatus: AuthStatus.Unknown,
+  currentOffer: null,
+  nearbyOffers: [],
+  isOfferLoading: false,
+  hasOfferError: false,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -47,6 +55,18 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(requireAuth, (state, action) => {
       state.authStatus = action.payload;
+    })
+    .addCase(setCurrentOffer, (state, action) => {
+      state.currentOffer = action.payload;
+    })
+    .addCase(setNearbyOffers, (state, action) => {
+      state.nearbyOffers = action.payload;
+    })
+    .addCase(setOfferLoadingStatus, (state, action) => {
+      state.isOfferLoading = action.payload;
+    })
+    .addCase(setOfferError, (state, action) => {
+      state.hasOfferError = action.payload;
     });
 });
 

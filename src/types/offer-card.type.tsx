@@ -13,5 +13,5 @@ export type OfferCard = {
   type : string;
   city: City;
   location: Location;
-  imageLinks: string[];
+  images: string[];
 }

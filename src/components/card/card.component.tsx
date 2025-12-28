@@ -20,7 +20,7 @@ export function CardComponent({ offerCard, onHover, cardType } : CardComponentPr
         </div>
       }
       <div className={`${OfferCardImageWrapperClass[cardType]} place-card__image-wrapper`}>
-        <Link to={`${AppRoute.OffersMain}/${offerCard.id}`}>
+        <Link to={`/offer/${offerCard.id}`}>
           <img
             className="place-card__image"
             src={offerCard.previewImage}
@@ -54,7 +54,7 @@ export function CardComponent({ offerCard, onHover, cardType } : CardComponentPr
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`${AppRoute.OffersMain}/${offerCard.id}`}>{'There will be offer description'}</Link>
+          <Link to={`/offer/${offerCard.id}`}>{'There will be offer description'}</Link>
         </h2>
         <p className="place-card__type">{offerCard.type}</p>
       </div>

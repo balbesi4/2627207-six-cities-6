@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import ReviewForm from '../../components/comment-form/comment-form.component';
 import Header from '../../components/header/header.component';
 import ReviewList from '../../components/review/review-list.component';
@@ -7,23 +7,48 @@ import { MapClassName } from '../../const';
 import OffersList from '../../components/offer-list/offer-list.component';
 import { CardType } from '../../enums/card-type.enum';
 import { AppRoute } from '../../types/app-route.type';
-import { useAppSelector } from '../../hooks';
-import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useEffect, useState } from 'react';
+import { fetchOfferAction, fetchNearbyOffersAction, fetchCommentsAction } from '../../store/api-actions';
+import { setCurrentOffer, setNearbyOffers } from '../../store/action';
+import { LoadingScreen } from '../../components/spinner/spinner.component';
+import { AuthStatus } from '../../enums/auth-status.enum';
 
 
 export default function Offer(): JSX.Element {
-  const offerCards = useAppSelector((state) => state.offers);
-  const reviews = useAppSelector((state) => state.reviews);
   const params = useParams();
+  const dispatch = useAppDispatch();
+
+  const currentOffer = useAppSelector((state) => state.currentOffer);
+  const nearbyOffers = useAppSelector((state) => state.nearbyOffers);
+  const reviews = useAppSelector((state) => state.reviews);
+  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+  const hasOfferError = useAppSelector((state) => state.hasOfferError);
+  const authStatus = useAppSelector((state) => state.authStatus);
+  const offerCards = useAppSelector((state) => state.offers);
 
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
-  const currentOffer = offerCards.find((item) => item.id === params.id) ?? offerCards[0];
-  const selectedOfferCard = offerCards.find((offerCard) => offerCard.id === activeOfferId);
+  const selectedOfferCard = nearbyOffers.find((offerCard) => offerCard.id === activeOfferId);
 
-  const currentOfferReviews = reviews.filter((review) => review.offerId === currentOffer.id);
-  const nearbyOffers = offerCards.filter(
-    (offerCard) => offerCard.city.name === currentOffer.city.name && offerCard.id !== currentOffer.id
-  ).slice(0, 3);
+  useEffect(() => {
+    if (params.id) {
+      dispatch(setCurrentOffer(null));
+      dispatch(setNearbyOffers([]));
+      dispatch(fetchOfferAction(params.id));
+      dispatch(fetchNearbyOffersAction(params.id));
+      dispatch(fetchCommentsAction(params.id));
+    }
+  }, [dispatch, params.id]);
+
+  if (hasOfferError) {
+    return <Navigate to={AppRoute.NotFound} />;
+  }
+
+  if (isOfferLoading || !currentOffer) {
+    return <LoadingScreen />;
+  }
+
+  const isAuthorized = authStatus === AuthStatus.Auth;
 
   return (
     <div className="page">
@@ -44,7 +69,7 @@ export default function Offer(): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.imageLinks.map((imageLink) => (
+              {currentOffer.images.map((imageLink) => (
                 <div key={imageLink} className="offer__image-wrapper">
                   <img className="offer__image" src={imageLink} alt="Photo studio"/>
                 </div>
@@ -109,9 +134,9 @@ export default function Offer(): JSX.Element {
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{currentOfferReviews ? currentOfferReviews.length : 0}</span></h2>
-                <ReviewList reviews={currentOfferReviews}/>
-                <ReviewForm/>
+                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews ? reviews.length : 0}</span></h2>
+                <ReviewList reviews={reviews}/>
+                {isAuthorized && <ReviewForm offerId={currentOffer.id}/>}
               </section>
             </div>
           </div>
