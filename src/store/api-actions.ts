@@ -110,3 +110,27 @@ export const postCommentAction = createAsyncThunk<Review[], {offerId: string; co
     return data;
   },
 );
+
+export const toggleFavoriteAction = createAsyncThunk<OfferCard, {offerId: string; status: number}, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offers/toggleFavorite',
+  async ({offerId, status}, {dispatch, extra: api}) => {
+    const {data} = await api.post<OfferCard>(`/favorite/${offerId}/${status}`);
+    return data;
+  },
+);
+
+export const fetchFavoritesAction = createAsyncThunk<OfferCard[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offers/fetchFavorites',
+  async (_arg, {extra: api}) => {
+    const {data} = await api.get<OfferCard[]>('/favorite');
+    return data;
+  },
+);

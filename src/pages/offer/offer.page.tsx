@@ -1,4 +1,4 @@
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useNavigate } from 'react-router-dom';
 import ReviewForm from '../../components/comment-form/comment-form.component';
 import Header from '../../components/header/header.component';
 import ReviewList from '../../components/review/review-list.component';
@@ -8,8 +8,8 @@ import OffersList from '../../components/offer-list/offer-list.component';
 import { CardType } from '../../enums/card-type.enum';
 import { AppRoute } from '../../types/app-route.type';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { useEffect, useState } from 'react';
-import { fetchOfferAction, fetchNearbyOffersAction, fetchCommentsAction } from '../../store/api-actions';
+import { useEffect, useState, useCallback } from 'react';
+import { fetchOfferAction, fetchNearbyOffersAction, fetchCommentsAction, toggleFavoriteAction } from '../../store/api-actions';
 import { clearOfferDetails } from '../../store/slices/offer-details-slice';
 import { LoadingScreen } from '../../components/spinner/spinner.component';
 import { AuthStatus } from '../../enums/auth-status.enum';
@@ -19,6 +19,7 @@ import { selectCurrentOffer, selectNearbyOffers, selectReviews, selectIsOfferLoa
 export default function Offer(): JSX.Element {
   const params = useParams();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const currentOffer = useAppSelector(selectCurrentOffer);
   const nearbyOffers = useAppSelector(selectNearbyOffers);
@@ -30,6 +31,20 @@ export default function Offer(): JSX.Element {
 
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const selectedOfferCard = nearbyOffers.find((offerCard) => offerCard.id === activeOfferId);
+
+  const handleFavoriteClick = useCallback(() => {
+    if (!currentOffer) {
+      return;
+    }
+
+    if (authStatus !== AuthStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    const status = currentOffer.isFavorite ? 0 : 1;
+    dispatch(toggleFavoriteAction({ offerId: currentOffer.id, status }));
+  }, [authStatus, navigate, dispatch, currentOffer]);
 
   useEffect(() => {
     if (params.id) {
@@ -87,7 +102,11 @@ export default function Offer(): JSX.Element {
                 <h1 className="offer__name">
                   {currentOffer.title}
                 </h1>
-                <button className={`offer__bookmark-button ${currentOffer.isFavorite && 'offer__bookmark-button--active'} button`} type="button">
+                <button
+                  className={`offer__bookmark-button ${currentOffer.isFavorite && 'offer__bookmark-button--active'} button`}
+                  type="button"
+                  onClick={handleFavoriteClick}
+                >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
