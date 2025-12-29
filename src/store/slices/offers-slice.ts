@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OfferCard } from '../../types/offer-card.type.js';
 import { SortType } from '../../enums/sort-options.enum.js';
-import { fetchOffersAction } from '../api-actions.js';
+import { fetchOffersAction, toggleFavoriteAction, fetchFavoritesAction } from '../api-actions.js';
 
 type OffersState = {
   offers: OfferCard[];
@@ -34,6 +34,20 @@ export const offersSlice = createSlice({
       })
       .addCase(fetchOffersAction.rejected, (state) => {
         state.areOffersLoading = false;
+      })
+      .addCase(toggleFavoriteAction.fulfilled, (state, action) => {
+        const updatedOffer = action.payload;
+        const offerIndex = state.offers.findIndex((offer) => offer.id === updatedOffer.id);
+        if (offerIndex !== -1) {
+          state.offers[offerIndex] = updatedOffer;
+        }
+      })
+      .addCase(fetchFavoritesAction.fulfilled, (state, action) => {
+        const favoriteOffers = action.payload;
+        state.offers = state.offers.map((offer) => ({
+          ...offer,
+          isFavorite: favoriteOffers.some((favOffer) => favOffer.id === offer.id)
+        }));
       });
   },
 });

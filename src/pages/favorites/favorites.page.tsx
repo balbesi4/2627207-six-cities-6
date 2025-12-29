@@ -3,12 +3,19 @@ import Header from '../../components/header/header.component';
 import OffersList from '../../components/offer-list/offer-list.component';
 import { OfferCard } from '../../types/offer-card.type';
 import { CardType } from '../../enums/card-type.enum';
-import { useAppSelector } from '../../hooks';
-import { useMemo } from 'react';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { useMemo, useEffect } from 'react';
 import { selectOffers } from '../../store/selectors';
+import { fetchFavoritesAction } from '../../store/api-actions';
 
 export function Favorites(): JSX.Element {
+  const dispatch = useAppDispatch();
   const offers = useAppSelector(selectOffers);
+
+  useEffect(() => {
+    dispatch(fetchFavoritesAction());
+  }, [dispatch]);
+
   const favoriteOfferCards = useMemo(
     () => offers.filter((offer) => offer.isFavorite),
     [offers]

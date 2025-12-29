@@ -1,9 +1,13 @@
-import { memo } from 'react';
-import { Link } from 'react-router-dom';
+import { memo, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {OfferCard} from '../../types/offer-card.type.tsx';
 import { AppRoute } from '../../types/app-route.type.tsx';
 import { CardType } from '../../enums/card-type.enum.tsx';
 import { OfferCardImageWrapperClass } from '../../const.tsx';
+import { useAppDispatch, useAppSelector } from '../../hooks/index.ts';
+import { toggleFavoriteAction } from '../../store/api-actions.ts';
+import { AuthStatus } from '../../enums/auth-status.enum.tsx';
+import { selectAuthStatus } from '../../store/selectors.ts';
 
 type CardComponentProps = {
   offerCard: OfferCard;
@@ -12,6 +16,20 @@ type CardComponentProps = {
 };
 
 function CardComponent({ offerCard, onHover, cardType } : CardComponentProps): JSX.Element {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authStatus = useAppSelector(selectAuthStatus);
+
+  const handleFavoriteClick = useCallback(() => {
+    if (authStatus !== AuthStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    const status = offerCard.isFavorite ? 0 : 1;
+    dispatch(toggleFavoriteAction({ offerId: offerCard.id, status }));
+  }, [authStatus, navigate, dispatch, offerCard.id, offerCard.isFavorite]);
+
   return (
     <article className={`${cardType} place-card`} onMouseEnter={() => onHover && onHover(offerCard.id)} onMouseLeave={() => onHover && onHover(null)}>
       {
@@ -37,10 +55,11 @@ function CardComponent({ offerCard, onHover, cardType } : CardComponentProps): J
             <b className="place-card__price-value">&euro;{offerCard.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <
-            button className={`place-card__bookmark-button button ${
+          <button
+            className={`place-card__bookmark-button button ${
               offerCard.isFavorite && 'place-card__bookmark-button--active'} button`}
             type="button"
+            onClick={handleFavoriteClick}
           >
             <svg className="place-card__bookmark-icon" width={18} height={19}>
               <use xlinkHref="#icon-bookmark"></use>
@@ -50,7 +69,7 @@ function CardComponent({ offerCard, onHover, cardType } : CardComponentProps): J
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${offerCard.rating}%` }}></span>
+            <span style={{ width: `${(offerCard.rating / 5) * 100}%` }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

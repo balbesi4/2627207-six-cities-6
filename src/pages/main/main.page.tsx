@@ -11,6 +11,7 @@ import SortOptions from '../../components/sort-options/sort-options.component.ts
 import { SortType } from '../../enums/sort-options.enum.tsx';
 import { setSortType } from '../../store/slices/offers-slice.js';
 import { selectCity, selectSortedOffers, selectOffers } from '../../store/selectors.js';
+import MainEmpty from '../../components/main-empty/main-empty.component.tsx';
 
 export default function MainPage(): JSX.Element {
   const selectedCity = useAppSelector(selectCity);
@@ -46,24 +47,30 @@ export default function MainPage(): JSX.Element {
         </div>
       </header>
 
-      <main className="page__main page__main--index">
+      <main className={`page__main page__main--index ${sortedOffers.length === 0 ? 'page__main--index-empty' : ''}`}>
         <h1 className="visually-hidden">Cities</h1>
         <CitiesList selectedCity={selectedCity} onCityChange={handleCityChange}/>
         <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{sortedOffers.length} places to stay in {selectedCity.name}</b>
-              <SortOptions selectedSortType={selectedSortType} onSortChange={handleSortChange}/>
-              <OffersList offerCards={sortedOffers} onActiveOfferChange={setActiveOfferId} cardType={CardType.Regular} />
-            </section>
+          <div className={`cities__places-container ${sortedOffers.length === 0 ? 'cities__places-container--empty' : ''} container`}>
+            {sortedOffers.length === 0 ? (
+              <MainEmpty cityName={selectedCity.name} />
+            ) : (
+              <section className="cities__places places">
+                <h2 className="visually-hidden">Places</h2>
+                <b className="places__found">{sortedOffers.length} places to stay in {selectedCity.name}</b>
+                <SortOptions selectedSortType={selectedSortType} onSortChange={handleSortChange}/>
+                <OffersList offerCards={sortedOffers} onActiveOfferChange={setActiveOfferId} cardType={CardType.Regular} />
+              </section>
+            )}
             <div className="cities__right-section">
-              <Map
-                city={selectedCity}
-                offerCards={sortedOffers}
-                selectedOfferCard={selectedOfferCard}
-                className={MapClassName.Main}
-              />
+              {sortedOffers.length > 0 && (
+                <Map
+                  city={selectedCity}
+                  offerCards={sortedOffers}
+                  selectedOfferCard={selectedOfferCard}
+                  className={MapClassName.Main}
+                />
+              )}
             </div>
           </div>
         </div>
